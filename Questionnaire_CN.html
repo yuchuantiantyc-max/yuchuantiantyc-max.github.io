@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术问卷调查系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #2c3e50;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .timer-notice {
+            background: #f39c12;
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+
+        .timer-notice h2 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .countdown {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .success-message {
+            background: #27ae60;
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .success-message h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .questionnaire-frame {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #95a5a6;
+            font-size: 13px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="university-logo">📋</div>
+        
+        <div class="header">
+            <h1>行为经济学实验调查</h1>
+            <p>Academic Questionnaire Survey System</p>
+        </div>
+
+        <!-- 定时未开放提示 -->
+        <div id="timerNotice" class="timer-notice">
+            <h2>问卷尚未开放</h2>
+            <p>本问卷将于指定时间开放访问</p>
+            <div class="countdown" id="countdown"></div>
+            <p style="font-size: 14px; margin-top: 10px;">请耐心等待或稍后再访问</p>
+        </div>
+
+        <!-- 密钥验证表单 -->
+        <div id="accessForm">
+            <div class="content">
+                <div class="info-box">
+                    <p>尊敬的参与者：</p>
+                    <p style="margin-top: 10px;">
+                        感谢您参与本次学术调查。本问卷采用通行密钥验证方式，以确保数据收集的规范性和有效性。
+                        请输入您收到的通行密钥以访问问卷。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessKey">通行密钥 (Access Key)</label>
+                    <input 
+                        type="password" 
+                        id="accessKey" 
+                        placeholder="请输入通行密钥"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <button class="btn" onclick="verifyAccess()">验证并访问问卷</button>
+                
+                <div id="errorMessage" class="error-message">
+                    密钥错误，请检查后重试
+                </div>
+            </div>
+        </div>
+
+        <!-- 成功页面 -->
+        <div id="successPage" class="hidden">
+            <div class="success-message">
+                <h2>✓ 验证成功</h2>
+                <p>正在跳转至问卷页面...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>本问卷数据仅用于学术研究，我们将严格保护您的隐私</p>
+            <p style="margin-top: 5px;">© 2025 Academic Research Team</p>
+        </div>
+    </div>
+
+    <script>
+        // ========== 配置区域 ==========
+        
+        // 1. 设置您的问卷星链接
+        const QUESTIONNAIRE_URL = 'https://v.wjx.cn/vm/Yen4HWL.aspx';
+        
+        // 2. 设置通行密钥（可以设置多个）
+        const ACCESS_KEYS = [
+            'SURVEY2025',      // 默认密钥
+            'ACADEMIC2025',    // 备用密钥1
+            'RESEARCH2025'     // 备用密钥2
+        ];
+        
+        // 3. 设置问卷开放时间（如果不需要定时，请设置为 null）
+        // 格式：'YYYY-MM-DD HH:MM:SS'
+        const RELEASE_TIME = '2025-12-03 10:00:00';  // 示例：2025年12月5日上午10点
+        // 如果不需要定时发布，改为：const RELEASE_TIME = null;
+        
+        // ========== 功能代码 ==========
+        
+        // 检查是否到达开放时间
+        function checkReleaseTime() {
+            if (!RELEASE_TIME) {
+                return true; // 不设定时间，直接开放
+            }
+            
+            const now = new Date().getTime();
+            const releaseDate = new Date(RELEASE_TIME).getTime();
+            
+            if (now < releaseDate) {
+                showTimerNotice(releaseDate);
+                return false;
+            }
+            return true;
+        }
+        
+        // 显示倒计时
+        function showTimerNotice(releaseDate) {
+            document.getElementById('accessForm').classList.add('hidden');
+            document.getElementById('timerNotice').style.display = 'block';
+            
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = releaseDate - now;
+                
+                if (distance < 0) {
+                    location.reload(); // 时间到了，刷新页面
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                let countdownText = '';
+                if (days > 0) countdownText += days + '天 ';
+                countdownText += String(hours).padStart(2, '0') + ':' + 
+                                String(minutes).padStart(2, '0') + ':' + 
+                                String(seconds).padStart(2, '0');
+                
+                document.getElementById('countdown').textContent = countdownText;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+        
+        // 验证密钥
+        function verifyAccess() {
+            const inputKey = document.getElementById('accessKey').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (!inputKey) {
+                errorMessage.textContent = '请输入通行密钥';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // 验证密钥
+            if (ACCESS_KEYS.includes(inputKey)) {
+                // 验证成功
+                errorMessage.style.display = 'none';
+                document.getElementById('accessForm').classList.add('hidden');
+                document.getElementById('successPage').classList.remove('hidden');
+                
+                // 1.5秒后跳转到问卷
+                setTimeout(() => {
+                    window.location.href = QUESTIONNAIRE_URL;
+                }, 1500);
+            } else {
+                // 验证失败
+                errorMessage.textContent = '密钥错误，请检查后重试';
+                errorMessage.style.display = 'block';
+                document.getElementById('accessKey').value = '';
+                document.getElementById('accessKey').focus();
+            }
+        }
+        
+        // 允许按回车键提交
+        document.getElementById('accessKey').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                verifyAccess();
+            }
+        });
+        
+        // 页面加载时检查开放时间
+        window.onload = function() {
+            if (!checkReleaseTime()) {
+                // 未到开放时间，显示倒计时
+                return;
+            }
+            // 已到开放时间，显示密钥输入界面
+            document.getElementById('accessForm').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
